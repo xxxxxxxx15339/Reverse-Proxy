@@ -1,0 +1,28 @@
+net/url Package :
+  The core tool that is used is --> url.Parse() function.
+  It converts a raw string into a *url.URL struct that looks like this :
+
+      """
+        type URL struct {
+              Scheme   string // "http" or "https"
+              Host     string // "localhost:8080" or "google.com"
+              Path     string // "/api/v1/users"
+              RawQuery string // "id=123&sort=asc"
+              // ... plus other fields
+          }
+      """
+
+  The standard pattern on how to parse a URL is : 
+      
+      """ 
+        raw := "http://localhost:8080/search?q=golang"
+
+        parsedURL, err := url.Parse(raw) 
+        if err != nil {
+          panic(err)  
+        }
+
+        fmt.Println("Scheme: ", parsedURL.Scheme) 
+        fmt.Println("Host: ", parsedURL.Host)
+        fmt.Println("Path: ", parsedURL.Path) 
+

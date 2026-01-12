@@ -1,0 +1,5 @@
+Day 1: (12/01/2026)
+  - I understood a bit the Work Flow of the Revrese Proxy.
+  - I set up the Base structs : (Backend + ServerPool + ProxyConfig).
+  - I set up a Dependency Hierarchy that avoids the circular imports.
+  - I did a little initiation about Mutex and Net/URL.

@@ -1,0 +1,18 @@
+concurrent-proxy/
+├── cmd/
+│   └── lb/
+│       └── main.go           # The entry point. Wires everything together.
+├── internal/
+│   ├── models/
+│   │   └── types.go          # Defines Backend, ServerPool, and Config structs.
+│   ├── server/
+│   │   ├── pool.go           # Logic for ServerPool (AddBackend, GetNextPeer).
+│   │   ├── health.go         # The background health check loop.
+│   │   └── balancer.go       # Round-Robin / Least-Connections logic.
+│   ├── proxy/
+│   │   └── handler.go        # The HTTP Handler that intercepts user requests.
+│   └── api/
+│       └── admin.go          # The Admin API handlers (GET /status, POST /backends).
+├── config.json               # Initial backend URLs[cite: 80].
+├── go.mod                    # Module definition[cite: 79].
+└── README.md                 # Instructions.

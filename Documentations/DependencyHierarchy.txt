@@ -1,0 +1,14 @@
+ 
+Dependency Hierarchy "Avoid Circular imports" :
+
+     [ cmd/lb (main) ]      <-- Imports Everything
+             |
+      +------+------+
+      |             |
+ [ proxy ]       [ api ]      <-- Imports server & models
+      |             |
+      +------+------+
+             |
+         [ server ]           <-- Imports models
+             |
+         [ models ]           <-- Imports NOTHING (The Foundation)
