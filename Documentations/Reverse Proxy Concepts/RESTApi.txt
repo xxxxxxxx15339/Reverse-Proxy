@@ -1,0 +1,40 @@
+Definition: 
+  REST API is an architectural style for building web services where clients and servers communicate by exchanging resources using standard HTTP methods. 
+
+The 5 Rules to Follow:
+
+  1- Uniform Interface (The most important rule):
+      Interacre with the server in a consistent, standarized way.
+        * Resources are Nouns, not Verbs: Your URLs should represent things, not actions.
+              [Bad: /getBackends, /adNewServer]
+              [Good: /backends]
+        * HTTP Verbs define the Action: 
+              [GET /backends]  (Read the list)
+              [POST /backends]  (Create a new one)
+              [DELETE /backends]  (Remove one)
+
+
+  2- Statelessness:
+      The server should not remember the "state" of the client between requests
+        * Rule: 
+              [Every single request from the client must contain all the information needed to understand and process it]
+        * Why: 
+              [This allows the server to scale easily because it doesn't need to hold memory for every user]
+
+
+  3- Client-Server Separation:
+      The client (frontend/user) and the server (backend) act independently.
+        * Rule:
+              [The client doesn't need to know how the data is stored (SQL, NoSQL, text file). The server doesn't need to know how the UI looks. They only agree on the format of the data (JSON)]
+
+
+  4- Cacheability :
+      Responses should define wether they can be cached (saved) by the client.
+        * Rule:
+              [If the data doesn't change often (like a list of countries), the server should tell the client "You can save this for 1 hour" so the client doesn't have to ask again.]
+
+
+  5- Layered System :
+      The client should not know (or care) if it is connected directly to the end server ot to an intermediary.
+        * Relevance: 
+              [This is exactly what I am building. Your Reverse Proxy is a "layer". The client talks to your proxy, and your proxy talks to the backends. The client thinks your proxy is the backend.]

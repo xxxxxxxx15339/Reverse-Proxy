@@ -3,3 +3,8 @@ Day 1: (12/01/2026)
   - I set up the Base structs : (Backend + ServerPool + ProxyConfig).
   - I set up a Dependency Hierarchy that avoids the circular imports.
   - I did a little initiation about Mutex and Net/URL.
+
+Day 2: (14/01/2026)
+  - I understood the concept of REST API and the 5 rules to follow 
+  - I understood the concpet of Readers Writers Lock 
+  - While trying to understand the concept of Context Cancellation, i found it hard hard to understand channels and net/http, so i will focus on the basic go concepts first like : channels - net/http - goroutines - The server - The client ...

@@ -1,0 +1,22 @@
+Context Cancellation is the mechanism Go uses to stop work that is no longer needed. It is a signal that travels down from the person who asked fo the work (the Client) to the person doing the work (the Server/Database), saying, "Stop everything, I don't care about the result anymore."
+
+
+  1. The Analogy: Ordering Food
+    Imagine you are at a restaurant
+        * Request: You order a steak (The HTTP Request).
+        * Processing: The waiter tells the chef. The chef puts a steak on the grill.
+        * Cancellation: Suddenly, you get an emergency phone call and have to leave immediately. You tell the waiter, "I'm leaving, cancel the order."
+        * Propagation: The waiter runs to the kitchen and tells the chef, "Stop cooking that steak!"
+        * Result: The chef turns off the gas and saves the steak for someone else
+
+    ==> Without Context Cancellation: You leave the restaurant. The waiter ignores you. The chef cooks the steak for 20 minutes. The waiter brings the steak to an empty table.
+        * Result: Wasted gas, wasted food, wasted time. In a server, this is wasted memory and CPU.
+
+  2. Why is it Critical for a Proxy?
+    A Reverse Proxy sits in the middle. It is vulnerable to "hanging" connections.
+        * User Browser connects to Your Proxy.
+        * Your Proxy connects to Backend API.
+        * The Scenario: The Backend is slow (taking 10 seconds). The User gets bored after 2 seconds and closes the tab.
+        * The Problem: If you don't use Context, your Proxy stays connected to the Backend for 8 more seconds, waiting for a response that no one will ever read. If this happens 1000 times, your Proxy runs out of open ports and crashes.
+
+  
