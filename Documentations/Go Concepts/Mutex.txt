@@ -1,0 +1,5 @@
+1. The Core Concept: The "Race Condition"
+    To understand the cure (Mutex), you must understand the disease (Race Condition).
+    Imagine a Bank Account with balance $100:
+        * You check the balance: $100. You decide to withdraw &10
+        * Your Sister checks the balance at the exact same nanosecond: &100. She decides to withdraw $100. She decides to withdraw 410

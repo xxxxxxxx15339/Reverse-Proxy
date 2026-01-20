@@ -1,28 +1,108 @@
-net/url Package :
-  The core tool that is used is --> url.Parse() function.
-  It converts a raw string into a *url.URL struct that looks like this :
+In the Context of your Reverse Proxy project, you need to master net/http because your program plays two roles at the same time: 
+    * It is a Server: It listens for users (Browser -> Proxy)
+    * It is a Client: It talks to the backends (Proxy -> Backend API)
+Here is the breakdown of how Go handles HTTP.
 
-      """
-        type URL struct {
-              Scheme   string // "http" or "https"
-              Host     string // "localhost:8080" or "google.com"
-              Path     string // "/api/v1/users"
-              RawQuery string // "id=123&sort=asc"
-              // ... plus other fields
-          }
-      """
-
-  The standard pattern on how to parse a URL is : 
-      
-      """ 
-        raw := "http://localhost:8080/search?q=golang"
-
-        parsedURL, err := url.Parse(raw) 
-        if err != nil {
-          panic(err)  
+  1. The Core Interface: http.Handler 
+      Everything in Go's web server revolves around one interface. If an object implements this, it can serve HTTP traffic.
+      Example: 
+        type Handler interface {
+          ServeHTTP(w ResponseWriter, r *Request)
         }
+      This is the "traffic cop". Every time a request hits your server, Go calls ServeHTTP.
+          * w http.ResponseWriter: The tool you use to send data back to the user. 
+          * r *http.Request: The struct containing what the user sent (URL, Headers, Body).
 
-        fmt.Println("Scheme: ", parsedURL.Scheme) 
-        fmt.Println("Host: ", parsedURL.Host)
-        fmt.Println("Path: ", parsedURL.Path) 
+
+  2. The Server (Listening)
+      To accept requests, you need to "listen" on a TCP port. 
+      Example: 
+        package main 
+
+        import ( 
+          "fmt" 
+          "net/http"
+        )
+
+        func main() {
+          // 1. Define the handler (The Logic)
+          // "When someone hits '/', run this function."
+          http.HandleFunc("/", func(w http.ResponseWriter, r +http.Request) {
+            // 'w' is the response. We write to it like a file.
+            fmt.Fprint(w, "Hello, I am the Proxy!")
+
+          })
+
+          // 2. Start the Server (The Ear)
+          // This blocks forever, listening on port 8080.
+          fmt.Println("Server started on: 8080")
+          http.ListenAndServe(":8080", nil)
+        }.
+
+
+      * http.HandleFunc: A shortcut to register a function as a handler
+      * http.ListenAndServe: The infinite loop that accepts connections. 
+
+  3. The Client (Requesting)
+      Since your proxy needs to forward traffic to the real backend, it must act as a client 
+      Example: 
+        package main 
+
+        import(
+          "fmt"
+          "net/http"
+          "io"
+        )
+
+        func main() {
+          // 1. Create a Client (The Browser)
+          // It is best practice to set a timeout so you don't hang forever.
+          client := &http.Client{
+            Timeout: 10 * time.Second,
+          }
+
+          // 2. Create the Request (The Letter)
+          // We want to GET data from localhost:8081
+          req, _ := http.NewRequest("GET", "http://localhost:8081", nil)
+
+          // 3. Send the Request (Mailing the Letter)
+          resp, err := client.Do(req)
+          if err != nil {
+            panic(err)
+          }
+
+          // IMPORTANT: Always close the body to prevent memory leaks!
+          defer resp.Body.Close()
+
+          // 4. Read the Response 
+          body, _ := io.ReadAll(resp.Body)
+          fmt.Println("Backend said:", string(body))
+        }
+  
+  
+  4. The Critical Structures
+      For my project, you will manipulate these two objects heavily.
+          A. htp.Request (The Input): 
+            This contains everything about the incoming traffic.
+              * r.URL.Path: The path requested (e.g., /images/logo.png)
+              * r.Method: The verb (GET, POST, DELETE)
+              * r.Header: The metadata (e.g., User-Agent, Content-Type)
+              * r.Context(): The "cancel signal" we discussed earlier.
+
+          B. http.ResponseWriter (The Output):
+            This is an interface with three main methods:
+              * w.Header().Set("Key", "Value"): Set headers (must do this before writing body
+              * w.WriteHeader(404): Set the status code (default is 200 OK).
+              * w.Write([]byte("data")): Send the actual data (HTML, JSON, etc.).
+
+  5. Application to my Project: 
+      This is how the pieces fit into my Reverse Proxy: 
+          * User connects: http.ListenAndServe accepts the connection.
+          * Processing: My ServeHTTP function is called 
+          * Load Balancing: You check your ServePoll (Using Mutexes) to find a URL 
+          * Forwarding: 
+              - Instead of writing client.Do(req) manually, i will use : httputil.NewSingleHostReverseProxy
+              - This helper function generates a ServeHTTP function that automatically copies data from the incoming request (r) to the backend, and copies the response back to the writer (w)
+
+
 

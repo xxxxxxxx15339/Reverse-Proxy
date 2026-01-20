@@ -1,0 +1,32 @@
+A Goroutine is simply a function that runs in the background concurrently with other functions. 
+  
+  1. The Concept: The "Fire and Forget" 
+      * Normal Function Call: You call doWork(). Your program stops at that line, waits for doWork to finish, and then moves to the next line. 
+      * Goroutine: You call go doWork(). Your program immediatly moves to the next line. doWork runs in the background at the same time .
+
+  2. The Syntax: 
+      You just add the keyword go in front of any function call. 
+
+  3. The "Trap" (Why the code might do nothing)
+      This is the most common beginner mistake. If the main() function finishes, the program exits immediatly. It does not wait for the background goroutines to finish.
+      * Fix: You usually keep the main function alive using select {} (forever loop) or by running a blocking server like http.ListenAndServe 
+
+  4. Why my Project needs this: 
+      * Health Checker: 
+          [The Problem: Your main function will be busy listening for users on port 8080 (http.ListenAndServe). It cannot also loop endlessly to ping backend servers.]
+          [The Solution: You will lunch the Health Checker in a goroutine before starting the server.]
+      * Example:  
+          """
+            func main() {
+              // ... setup code ...
+
+              // Start the health check in the background 
+              // It runs forever in its own timeline.
+              go func() {
+                health.StartHealthCheck(pool)
+              }()
+
+              // Main thread blocks here, listening for traffic
+              http.ListenAndServe(":8080", proxy)
+            }
+          """
