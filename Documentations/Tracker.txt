@@ -13,3 +13,8 @@ from (15/01/2026) to (20/01/2026)
   - I Studied all the Go concepts that i needed to build the Reverse Proxy.
   - I Studied all the Reverse Proxy related concepts that i needed.
   - I created the thread-safe methods for the Backend struct.
+
+Day 4: (22/01/2026) 
+  - I created the thread-safe methods for the ServerPool struct.
+  - I created the GetNextValidPeer method for the ServerPool struct. 
+  - I created the AddBackend method for the ServerPool struct. 

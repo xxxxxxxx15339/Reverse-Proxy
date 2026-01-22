@@ -41,3 +41,26 @@ func (b *Backend) IsAlive() bool {
 	defer b.mux.RUnlock()
 	return b.Alive
 }
+
+ 
+// ServerPool Methods
+func (s *ServerPool) Addbackend(b *Backend) {
+	s.Backends.append(s.Backends, b)
+}
+
+
+// With Atomic Increment, The CPU treats the read-modify-write operation as one single, uninterruptible step.
+func (s *ServerPool) GetNextValidPeer() *Backend {
+	for i := 0; i < len(s.Backends); i++ {	
+			next := atomic.AddInt64(&s.Current, 1) // This actually updates the Current in the ServerPool, directly by taking a pointer to s.Current and incrementing it.
+			index := next % int64(len(s.Backends))
+
+			candidate := s.Backends[index]
+				
+				if candidate.IsAlive() {
+					return candidate
+				}
+
+	}
+	return nil
+}
