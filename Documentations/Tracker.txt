@@ -18,3 +18,7 @@ Day 4: (22/01/2026)
   - I created the thread-safe methods for the ServerPool struct.
   - I created the GetNextValidPeer method for the ServerPool struct. 
   - I created the AddBackend method for the ServerPool struct. 
+
+Day 5: (04/02/2026)
+  - I initialized the Go module (`go mod init`).
+  - I implemented the core Proxy logic (Director, ServeHTTP).
