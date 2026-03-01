@@ -22,3 +22,22 @@ Day 4: (22/01/2026)
 Day 5: (04/02/2026)
   - I initialized the Go module (`go mod init`).
   - I implemented the core Proxy logic (Director, ServeHTTP).
+
+Day 6: (12/02/2026)
+  - I implemented the background Health Checker service.
+  - I started working on the Admin API endpoints.
+
+Day 7: (20/02/2026)
+  - I completed the Admin API (GET /status, POST /backends, DELETE /backends).
+  - I refined the Least-Connections selection logic.
+
+Day 8: (26/02/2026)
+  - I performed stress testing with multiple backend scenarios.
+  - I optimized the Mutex locking to improve performance.
+
+Final Day: (01/03/2026)
+  - I completed the project and verified all features.
+  - I cleaned up the code and removed all comments as requested.
+  - I created the final README and performed a full system demonstration.
+  - Project Finished! 🚀
+
